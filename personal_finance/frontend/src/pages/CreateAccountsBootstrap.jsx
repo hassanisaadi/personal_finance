@@ -10,20 +10,26 @@ const InstitutionSelectionPage = () => {
 
   const [institutions] = useState(initialInstitutions);
   const [selectedInstitutions, setSelectedInstitutions] = useState([]);
+  const [activeInstitutionIndex, setActiveInstitutionIndex] = useState(null);
+  const [newAccount, setNewAccount] = useState({ name: "", fee: "", type: "" });
 
   const addInstitution = (institution) => {
     setSelectedInstitutions((prev) => [...prev, { ...institution, accounts: [] }]);
   };
 
+  const handleAccountChange = (e) => {
+    const { name, value } = e.target;
+    setNewAccount((prev) => ({ ...prev, [name]: value }));
+  };
+
   const addAccount = (institutionIndex) => {
-    const accountName = prompt("Enter account name:");
-    if (accountName) {
-      setSelectedInstitutions((prev) => {
-        const updated = [...prev];
-        updated[institutionIndex].accounts.push(accountName);
-        return updated;
-      });
-    }
+    setSelectedInstitutions((prev) => {
+      const updated = [...prev];
+      updated[institutionIndex].accounts.push({ ...newAccount });
+      return updated;
+    });
+    setNewAccount({ name: "", fee: "", type: "" });
+    setActiveInstitutionIndex(null);
   };
 
   return (
@@ -84,18 +90,74 @@ const InstitutionSelectionPage = () => {
                 </div>
                 <button
                   className="btn btn-secondary btn-sm"
-                  onClick={() => addAccount(index)}
+                  onClick={() =>
+                    setActiveInstitutionIndex(
+                      activeInstitutionIndex === index ? null : index
+                    )
+                  }
                 >
-                  Add Account
+                  {activeInstitutionIndex === index ? "Close" : "Add Account"}
                 </button>
               </div>
+
+              {/* Account Form */}
+              {activeInstitutionIndex === index && (
+                <div className="card-body">
+                  <div className="mb-3">
+                    <label htmlFor="accountName" className="form-label">
+                      Account Name
+                    </label>
+                    <input
+                      type="text"
+                      id="accountName"
+                      name="name"
+                      value={newAccount.name}
+                      onChange={handleAccountChange}
+                      className="form-control"
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="accountFee" className="form-label">
+                      Account Fee
+                    </label>
+                    <input
+                      type="number"
+                      id="accountFee"
+                      name="fee"
+                      value={newAccount.fee}
+                      onChange={handleAccountChange}
+                      className="form-control"
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="accountType" className="form-label">
+                      Account Type
+                    </label>
+                    <input
+                      type="text"
+                      id="accountType"
+                      name="type"
+                      value={newAccount.type}
+                      onChange={handleAccountChange}
+                      className="form-control"
+                    />
+                  </div>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => addAccount(index)}
+                  >
+                    Add Account
+                  </button>
+                </div>
+              )}
+
               <ul className="list-group list-group-flush">
                 {institution.accounts.length === 0 && (
                   <li className="list-group-item">No accounts added yet.</li>
                 )}
                 {institution.accounts.map((account, accIndex) => (
                   <li key={accIndex} className="list-group-item">
-                    {account}
+                    {`Name: ${account.name}, Fee: ${account.fee}, Type: ${account.type}`}
                   </li>
                 ))}
               </ul>
