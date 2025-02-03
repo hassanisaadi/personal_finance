@@ -242,7 +242,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPageBootstrap";
 import SignupPage from "./pages/SignupPageBootstrap";
 import LoginPage from "./pages/LoginPageBootstrap";
-import CreateAccounts from "./pages/CreateAccountsBootstrap";
+import CreateAccountsPage from './pages/createAccountsPageBootstrap';
 
 function App() {
   return (
@@ -251,7 +251,7 @@ function App() {
         <Route path="/"       element={<LandingPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login"  element={<LoginPage />} />
-        <Route path="/create-accounts" element={<CreateAccounts />} />
+        <Route path="/create-accounts" element={<CreateAccountsPage />} />
       </Routes>
     </Router>
   );
